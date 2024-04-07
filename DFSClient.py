@@ -30,7 +30,7 @@ class DFSClient:
                 sock.connect((self.namenode_host, self.namenode_port))
                 request = f'GET_BLOCK_LOCATIONS|{json.dumps({"file_name": file_name})}'
                 sock.sendall(request.encode('utf-8'))
-                response = sock.recv(4096).decode('utf-8')
+                response = sock.recv(65536).decode('utf-8')
                 if response:
                     block_locations = json.loads(response)
                     return block_locations
@@ -48,7 +48,7 @@ class DFSClient:
                 sock.connect((data_node_host, int(data_node_port)))
                 request = json.dumps({'command': 'RETRIEVE', 'block_name': block_name})
                 sock.sendall(request.encode('utf-8'))
-                response_data = sock.recv(4096)
+                response_data = sock.recv(65536)
                 response = json.loads(response_data.decode('utf-8'))
                 if response['status'] == 'success':
                     block_data = bytes.fromhex(response['block_data'])
@@ -83,7 +83,7 @@ class DFSClient:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.connect((self.namenode_host, self.namenode_port))
                 sock.sendall(b'GET_DATA_NODES')
-                response = sock.recv(4096).decode('utf-8')
+                response = sock.recv(65536).decode('utf-8')
                 data_nodes = json.loads(response)
                 return data_nodes
         except Exception as e:
@@ -102,7 +102,7 @@ class DFSClient:
                 print(f"Sending {command} command for block {block_name} to DataNode {data_node_address}")
                 message = {'command': command, 'block_name': block_name, 'block_data': block_data.hex()}
                 sock.sendall(json.dumps(message).encode('utf-8'))
-                response = sock.recv(4096).decode('utf-8')
+                response = sock.recv(65536).decode('utf-8')
                 print(response)
         except Exception as e:
             print(f"Error sending data to DataNode {data_node_address}: {e}")

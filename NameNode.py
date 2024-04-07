@@ -22,7 +22,7 @@ class NameNode:
 
     def handle_client(self, client_socket):
         with client_socket as sock:
-            data = sock.recv(4096).decode('utf-8')
+            data = sock.recv(65536).decode('utf-8')
             command, _, payload=data.partition('|')
             if command == 'GET_DATA_NODES':
                 sock.sendall(json.dumps(self.data_nodes).encode('utf-8'))

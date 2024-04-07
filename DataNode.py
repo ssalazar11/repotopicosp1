@@ -36,7 +36,7 @@ class DataNode:
     def handle_client(self, client_socket):
         with client_socket as sock:
             try:
-                data = sock.recv(4096).decode('utf-8')
+                data = sock.recv(65536).decode('utf-8')
                 message = json.loads(data)
                 command = message['command']
                 block_name = message['block_name']
