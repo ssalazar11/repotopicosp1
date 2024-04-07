@@ -10,6 +10,7 @@ class DFSClient:
 
     def retrieve_file(self, file_name):
         block_locations=self.get_block_locations(file_name)
+        print("Block locations:", block_locations)
         if not block_locations:
             print(f"Could not retrieve block for {file_name}")
             return
@@ -41,7 +42,7 @@ class DFSClient:
             return {}
         
     def retrieve_block(self, block_name, data_node_address):
-        data_node_host, data_node_port = data_node_address.split(':')
+        data_node_host, data_node_port = data_node_address[0].split(':') if isinstance(data_node_address, list) else data_node_address.split(':')
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
                 sock.connect((data_node_host, int(data_node_port)))

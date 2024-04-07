@@ -40,13 +40,13 @@ class DataNode:
                 message = json.loads(data)
                 command = message['command']
                 block_name = message['block_name']
-                block_data = bytes.fromhex(message['block_data'])
-
+                
                 if command == 'STORE':
+                    block_data = bytes.fromhex(message['block_data'])
                     self.store_block(block_name, block_data)
                     response = f"Block {block_name} stored successfully."
                     client_socket.sendall(response.encode('utf-8'))
-                if command=='RETRIEVE':
+                elif command == 'RETRIEVE':
                     self.retrieve_block(block_name, client_socket)
             except Exception as e:
                 print(f"An error has occurred while handling the client: {e}")
